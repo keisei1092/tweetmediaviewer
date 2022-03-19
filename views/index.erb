@@ -1,0 +1,93 @@
+<html>
+  <head>
+    <title>twittermediaviewer</title>
+    <style>
+      * {
+        font-family: system-ui, -apple-system;
+      }
+
+      body {
+        width: 100%;
+        margin: 0;
+      }
+
+      form {
+        margin: 16px;
+      }
+
+      .tweets {
+          margin: 0 auto;
+      }
+
+      .tweet {
+          margin: 16px;
+          width: calc(100% / 3 - 34px);
+          border: 1px solid rgba(0, 0, 0, .125);
+          border-radius: .25rem;
+          background-color: white;
+      }
+
+      .content {
+        padding: 32px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px 0;
+      }
+
+      .text {
+        font-size: 16px;
+        line-height: 24px;
+        color: rgb(33, 37, 41)
+      }
+
+      .created_at {
+        color: #6c757d;
+        font-size: .875em;
+      }
+
+      img {
+        width: 100%;
+      }
+    </style>
+    
+  </head>
+  <body>
+    <form method="get">
+      <input type="text" name="name" id="name" value="<%= @name %>" required />
+      <input type="submit" value="取得">
+    </form>
+    <div class="tweets">
+      <% @tweets.each do |tweet| %>
+        <div class="tweet">
+          <div class="image">
+            <% tweet.media.map(&:media_url_https).map(&:to_s).each do |url| %>
+              <img src="<%= url %>" />
+            <% end %>
+          </div>
+          <div class="content">
+            <div class="text">
+              <%= tweet.text %>
+            </div>
+            <div class="created_at">
+              <%= tweet.created_at.dup.localtime %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/3.1.8/imagesloaded.pkgd.min.js"></script>
+    <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+    <script>
+      $("document").ready(() => {
+        const $container = $(".tweets");
+        $container.imagesLoaded(() => {
+          $container.masonry({
+            // options
+            itemSelector: '.tweet',
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
